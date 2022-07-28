@@ -5,7 +5,6 @@ pragma solidity 0.8.13;
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-
 // Basic NFT with ownership
 // First ID is 0
 contract BasicNFT is ERC721, Ownable {
