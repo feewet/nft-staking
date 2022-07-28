@@ -6,7 +6,7 @@ import BasicNFT from '../build/BasicNFT.json'
 use(solidity);
 
 describe('BasicNFT', () => {
-  const [owner, account1, account2, walletTo] = new MockProvider().getWallets()
+  const [owner, account1] = new MockProvider().getWallets()
   let nft: Contract
 
   beforeEach(async () => {
@@ -27,5 +27,4 @@ describe('BasicNFT', () => {
     await nft.mint(account1.address)
     expect(await nft.exists(0)).to.be.true
   })
-
 })
