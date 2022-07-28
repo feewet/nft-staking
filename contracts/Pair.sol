@@ -2,17 +2,11 @@
 
 pragma solidity 0.8.13;
 
-import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-
-// Match a player with the next player who joins by staking an NFT
-// Scalable for matchin with many unresolved matches
+// Match a player with the next player who joins
+// Scalable efficient matching algorithm
 // Winner of a match is determined by _winner() function
 // NFT can be unstaked if nobody joins or a pair is found
-contract NFTPair is Ownable {
-
-    IERC721 public nft;
+contract Pair {
 
     // player an address is paired with
     mapping(address => address) public pair;
@@ -27,21 +21,21 @@ contract NFTPair is Ownable {
     // player1 is the player account passed into the resolve() function
     event PairResolved(address indexed player1, address indexed player2, address outcome);
 
-    constructor(IERC721 _nft) {
-        nft = _nft;
-        Ownable(msg.sender);
+    constructor() {
     }
 
-    // join the next index and stake NFT
+    /**
+     * @dev Match msg.sender with the next account that joins
+     */
     function join() external {
         _join();
-        // stake NFT
-        // should be able to unstake if never resolved
     }
 
+    /// @dev internal join logic
     function _join() internal {
         require(msg.sender != nextPair, "Sender is already waiting for a pair.");
         require(pair[msg.sender] == address(0), "Sender is already paired.");
+
         if (nextPair == address(0)) {
             nextPair = msg.sender;
         }
@@ -55,15 +49,14 @@ contract NFTPair is Ownable {
         }
     }
 
-    // resolve an index and allow players to unstake their NFTs
-    // can improve this to use a random number and 3rd party call
+    /**
+     * @dev Resolve player match. Anyone can call this function.
+     */
     function resolve(address player) external {
         _resolve(player);
-
-        // unstake NFTs
-        // can transfer both back or mark them for claiming
     }
 
+    /// Internal match resolution logic
     function _resolve(address player) internal {
         require(pair[player] != address(0), "Sender is not paired.");
 
@@ -76,11 +69,9 @@ contract NFTPair is Ownable {
         delete pair[player];
     }
 
-    // return winner between 2 players
+    /// Determine winner between 2 players
     function _winner(address player1, address /*player2*/) internal pure returns (address) {
         // always return player 1 for testing
         return player1;
     }
-
-
 }

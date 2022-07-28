@@ -1,30 +1,19 @@
 import {expect, use} from 'chai'
 import {Contract, constants} from 'ethers'
 import {deployContract, MockProvider, solidity} from 'ethereum-waffle'
-import BasicNFT from '../build/BasicNFT.json'
-import NFTPair from '../build/NFTPair.json'
+import Pair from '../build/Pair.json'
 
 use(solidity);
 
-describe('NFTPair', () => {
+describe('Pair', () => {
   const [owner, account1, account2, account3, account4, account5] = new MockProvider().getWallets()
-  let nft: Contract
   let pair: Contract
 
   beforeEach(async () => {
-    nft = await deployContract(owner, BasicNFT)
-    pair = await deployContract(owner, NFTPair, [nft.address])
+    pair = await deployContract(owner, Pair)
   })
 
   describe('Setup', () => {
-    it('owner is deployer', async () => {
-      expect(await pair.owner()).to.equal(owner.address)
-    })
-
-    it('nft address is set correctly', async () => {
-      expect(await pair.nft()).to.equal(nft.address)
-    })
-
     it('next pair is zero address', async () => {
       expect(await pair.nextPair()).to.equal(constants.AddressZero)
     })
