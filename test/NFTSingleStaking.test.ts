@@ -17,10 +17,6 @@ describe('NFTSingleStaking', () => {
   })
 
   describe('setup', () => {
-    it('owner is deployer', async () => {
-      expect(await staking.owner()).to.equal(owner.address)
-    })
-
     it('nft address is set correctly', async () => {
       expect(await staking.nft()).to.equal(nft.address)
     })
