@@ -36,9 +36,19 @@ contract NFTSingleStaking is Ownable, IERC721Receiver {
     /// Emitted when an account unstakes
     event Unstaked(address indexed account, uint256 tokenId);
 
+    /// Public staking function
+    function stake(uint256 tokenId) external {
+        _stake(tokenId);
+    }
+
+    /// Public unstaking function
+    function unstake() external {
+        _unstake();
+    }
+
     /// Stake NFT with `tokenId` and tranfer to this contract
     /// Sender must approve transfer before calling this function
-    function stake(uint256 tokenId) external  {
+    function _stake(uint256 tokenId) internal {
         require(!isStaked[msg.sender], "Sender is already staked.");
         require(nft.ownerOf(tokenId) == msg.sender, "Sender is not owner of token.");
 
@@ -53,7 +63,7 @@ contract NFTSingleStaking is Ownable, IERC721Receiver {
     }
 
     /// Unstake NFT and transfer back to sender
-    function unstake() external {
+    function _unstake() internal {
         require(isStaked[msg.sender], "Sender is not staked");
 
         // get token ID
